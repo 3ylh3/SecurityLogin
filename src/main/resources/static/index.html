@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>security login</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/jsencrypt/3.0.0-rc.1/jsencrypt.min.js"></script>
+</head>
+
+<body style="background-color: #eee">
+
+    <div class="container" style="margin-top:10%;padding-left:35%;padding-right:35%;">
+        <form class="form-signin">
+            <h2 class="form-signin-heading">请登录</h2>
+            <label for="userName" class="sr-only">用户号</label>
+            <input type="text" id="userName" class="form-control" required autofocus>
+            <label for="inputPassword" class="sr-only">密码</label>
+            <input type="password" id="inputPassword" class="form-control" required>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" value="remember-me"> 记住用户
+                </label>
+            </div>
+        </form>
+        <button class="btn btn-lg btn-primary btn-block" onclick="login()">登录</button>
+    </div>
+<script>
+    function login() {
+        var username = $("#userName").val();
+        var password = $("#inputPassword").val();
+        if(username == "" || password == "") {
+            alert("请输入用户名和密码！");
+        }
+        // 调用后台生成公钥
+        $.ajax({
+            url: "http://localhost:8080/generateKey",
+            type: "POST",
+            async: false,
+            success: function(rsp) {
+                if(rsp.msgCd != "0000") {
+                    alert("获取公钥异常！");
+                } else {
+                    var encrypt = new JSEncrypt();
+                    encrypt.setPublicKey(rsp.publicKey);
+                    var pass = encrypt.encrypt(password);
+                    var param = {username:username,password:pass};
+                    // 调用后台登陆
+                    $.ajax({
+                        url: "http://localhost:8080/login",
+                        type:"POST",
+                        contentType: "application/json;charset=UTF-8",
+                        data: JSON.stringify(param),
+                        dataType: "json",
+                        async: false,
+                        success: function(rsp) {
+                            alert(rsp.msgCd);
+                        }
+                    });
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
