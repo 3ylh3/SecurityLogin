@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PageTransitionController {
     @RequestMapping("")
     public String index(){
-        return "index";
+        return "index.html";
+    }
+
+    @RequestMapping("/registerPage")
+    public String register () {
+        return "register.html";
     }
 }

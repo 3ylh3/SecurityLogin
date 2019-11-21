@@ -10,7 +10,8 @@ public enum MsgCdEnum {
     // 成功
     SUCSS("0000","成功"),
     GENERATE_KEY_ERROR("0001","生成密钥对异常"),
-    DECRYPT_ERROR("0002","解密异常");
+    LOGIN_ERROR("0002","登录失败"),
+    REGISTER_ERROR("0003", "注册失败");
 
     private String msgCd;
     private String msgInf;
