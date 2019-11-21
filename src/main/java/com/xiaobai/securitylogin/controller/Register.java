@@ -33,8 +33,6 @@ public class Register {
         try {
             String password = rsaService.decrypt(reqBO.getPassword(), request);
             String passMd5 = md5Service.encrypt(password);
-            System.out.println("password:" + password);
-            System.out.println("password md5:" + passMd5);
 
             // TODO 将用户信息入库
 

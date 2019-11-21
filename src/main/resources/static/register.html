@@ -38,35 +38,36 @@
         var password = $("#inputPassword").val();
         if(username == "" || password == "") {
             alert("请输入用户名和密码！");
-        }
-        // 调用后台生成公钥
-        $.ajax({
-            url: "/generateKey",
-            type: "POST",
-            async: false,
-            success: function(rsp) {
-                if(rsp.msgCd != "0000") {
-                    alert("获取公钥异常！");
-                } else {
-                    var encrypt = new JSEncrypt();
-                    encrypt.setPublicKey(rsp.publicKey);
-                    var pass = encrypt.encrypt(password);
-                    var param = {username:username,password:pass};
-                    // 调用后台注册
-                    $.ajax({
-                        url: "/register",
-                        type:"POST",
-                        contentType: "application/json;charset=UTF-8",
-                        data: JSON.stringify(param),
-                        dataType: "json",
-                        async: false,
-                        success: function(rsp) {
-                            alert(rsp.msgCd);
-                        }
-                    });
+        } else {
+            // 调用后台生成公钥
+            $.ajax({
+                url: "/generateKey",
+                type: "POST",
+                async: false,
+                success: function (rsp) {
+                    if (rsp.msgCd != "0000") {
+                        alert("获取公钥异常！");
+                    } else {
+                        var encrypt = new JSEncrypt();
+                        encrypt.setPublicKey(rsp.publicKey);
+                        var pass = encrypt.encrypt(password);
+                        var param = {username: username, password: pass};
+                        // 调用后台注册
+                        $.ajax({
+                            url: "/register",
+                            type: "POST",
+                            contentType: "application/json;charset=UTF-8",
+                            data: JSON.stringify(param),
+                            dataType: "json",
+                            async: false,
+                            success: function (rsp) {
+                                alert(rsp.msgCd);
+                            }
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 </script>
 </body>
