@@ -11,7 +11,8 @@ public enum MsgCdEnum {
     SUCSS("0000","成功"),
     GENERATE_KEY_ERROR("0001","生成密钥对异常"),
     LOGIN_ERROR("0002","登录失败"),
-    REGISTER_ERROR("0003", "注册失败");
+    REGISTER_ERROR("0003", "注册失败"),
+    PSWD_ERROR("0004","用户名或密码错误");
 
     private String msgCd;
     private String msgInf;

@@ -67,7 +67,11 @@
                             dataType: "json",
                             async: false,
                             success: function (rsp) {
-                                alert(rsp.msgCd);
+                                if(rsp.msgCd == "0000") {
+                                    alert("登录成功！");
+                                } else {
+                                    alert(rsp.msgCd + ":" + rsp.msgInf);
+                                }
                             }
                         });
                     }

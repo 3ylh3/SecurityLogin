@@ -61,7 +61,11 @@
                             dataType: "json",
                             async: false,
                             success: function (rsp) {
-                                alert(rsp.msgCd);
+                                if(rsp.msgCd == "0000") {
+                                    window.location.href = "/index.html";
+                                } else {
+                                    alert(rsp.msgCd + ":" + rsp.msgInf);
+                                }
                             }
                         });
                     }

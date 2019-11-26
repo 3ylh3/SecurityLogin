@@ -1,10 +1,12 @@
 package com.xiaobai.securitylogin.controller;
 
+import com.xiaobai.securitylogin.bean.UserInfoDO;
 import com.xiaobai.securitylogin.common.MsgCdEnum;
 import com.xiaobai.securitylogin.entity.RegisterReqBO;
 import com.xiaobai.securitylogin.entity.RegisterRspBO;
 import com.xiaobai.securitylogin.service.MD5Service;
 import com.xiaobai.securitylogin.service.RSAService;
+import com.xiaobai.securitylogin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +28,8 @@ public class Register {
     private RSAService rsaService;
     @Autowired
     private MD5Service md5Service;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public RegisterRspBO register(@RequestBody RegisterReqBO reqBO, HttpServletRequest request) {
@@ -34,10 +38,17 @@ public class Register {
             String password = rsaService.decrypt(reqBO.getPassword(), request);
             String passMd5 = md5Service.encrypt(password);
 
-            // TODO 将用户信息入库
-
-            rspBO.setMsgCd(MsgCdEnum.SUCSS.getMsgCd());
-            rspBO.setMsgInf(MsgCdEnum.SUCSS.getMsgInf());
+            UserInfoDO userInfoDO = new UserInfoDO();
+            userInfoDO.setUsername(reqBO.getUsername());
+            userInfoDO.setPassword(passMd5);
+            boolean rs = userService.register(userInfoDO);
+            if(rs) {
+                rspBO.setMsgCd(MsgCdEnum.SUCSS.getMsgCd());
+                rspBO.setMsgInf(MsgCdEnum.SUCSS.getMsgInf());
+            } else {
+                rspBO.setMsgCd(MsgCdEnum.REGISTER_ERROR.getMsgCd());
+                rspBO.setMsgInf(MsgCdEnum.REGISTER_ERROR.getMsgInf());
+            }
         } catch (Exception e) {
             e.printStackTrace();
             rspBO.setMsgCd(MsgCdEnum.REGISTER_ERROR.getMsgCd());
